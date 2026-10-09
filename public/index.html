@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>WQ UP BOT</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <div id="app">
+      <div id="auth-screen" class="screen hidden">
+        <div class="auth-card">
+          <h2>WQ UP BOT</h2>
+          <div class="auth-toggle">
+            <button class="toggle-btn active" data-mode="login">Login</button>
+            <button class="toggle-btn" data-mode="register">Register</button>
+          </div>
+
+          <form id="auth-form">
+            <label>
+              Username
+              <input type="text" id="username" placeholder="username" required />
+            </label>
+            <label>
+              Password
+              <input type="password" id="password" placeholder="password" required />
+            </label>
+            <button type="submit" class="primary-btn">Continue</button>
+          </form>
+        </div>
+      </div>
+
+      <div id="game-screen" class="screen hidden">
+        <header class="topbar">
+          <div class="brand-wrap">
+            <div class="brand-mark"></div>
+            <div class="brand-name">WQ UP BOT</div>
+          </div>
+
+          <nav class="nav">
+            <button class="nav-btn active" data-tab="upgrade">Апргейд</button>
+            <button class="nav-btn" data-tab="skins">Скины</button>
+            <button class="nav-btn" data-tab="inventory">Инвентарь</button>
+            <button class="nav-btn" data-tab="support">Поддержка</button>
+          </nav>
+
+          <div class="balance-box">
+            <div class="coin-pill"><span>◉</span> <strong id="balance">0</strong></div>
+            <button id="topup-btn" class="orange-btn">+ Пополнить</button>
+            <button id="logout-btn" class="ghost-btn">Logout</button>
+          </div>
+        </header>
+
+        <main class="main-layout">
+          <aside class="sidebar-panel">
+            <div class="sidebar-block">
+              <div class="mini-title">Условия</div>
+              <p>На телефоне меню бывает спартано.</p>
+              <p>Попробуй открыть сайт с компьютера или включить режим для ПК.</p>
+              <p>Чтобы получить инвентарь, просто выбери предмет и прокрути апгрейд.</p>
+            </div>
+          </aside>
+
+          <section class="content-panel">
+            <div id="upgrade-tab" class="tab-panel active">
+              <div class="shop-header">
+                <h1>Агрейд скинов</h1>
+                <div class="search-box">Поиск: AKR, Dragon...</div>
+              </div>
+
+              <div class="filter-row">
+                <button class="chip active">Все</button>
+                <button class="chip">Пистолеты</button>
+                <button class="chip">Винтовки</button>
+                <button class="chip">Снайперские</button>
+                <button class="chip">ПП</button>
+                <button class="chip">Ножи</button>
+                <button class="chip">Перчатки</button>
+              </div>
+
+              <div id="skin-grid" class="skin-grid"></div>
+            </div>
+
+            <div id="skins-tab" class="tab-panel">
+              <div class="panel-wrapper">
+                <h2>Скины</h2>
+                <div id="skin-market" class="market-list"></div>
+              </div>
+            </div>
+
+            <div id="inventory-tab" class="tab-panel">
+              <div class="panel-wrapper">
+                <h2>Инвентарь</h2>
+                <div id="inventory-list" class="inventory-list"></div>
+              </div>
+            </div>
+
+            <div id="support-tab" class="tab-panel">
+              <div class="panel-wrapper support-panel">
+                <h2>Поддержка</h2>
+                <p>Если вы хотите пополнить баланс, откройте окно пополнения и выберите сумму.</p>
+                <p>Для админских действий войдите в систему как администратор и используйте пароль 5533422.</p>
+              </div>
+            </div>
+          </section>
+        </main>
+      </div>
+    </div>
+
+    <div id="upgrade-modal" class="modal hidden">
+      <div class="modal-card">
+        <button class="close-btn" data-close="upgrade-modal">×</button>
+        <h3>Апгрейд</h3>
+
+        <div class="selected-skin">
+          <div id="selected-skin-preview" class="selected-skin-preview"></div>
+          <div>
+            <div id="selected-skin-name" class="selected-name">Purple Camo</div>
+            <div id="selected-skin-meta" class="selected-meta">Рейтинг</div>
+          </div>
+        </div>
+
+        <div class="upgrade-controls">
+          <label>
+            Шанс:
+            <input id="odds-range" type="range" min="5" max="90" value="35" />
+            <span id="odds-value">35%</span>
+          </label>
+
+          <label>
+            Множитель:
+            <input id="multiplier-range" type="range" min="1" max="10" value="2" />
+            <span id="multiplier-value">x2</span>
+          </label>
+
+          <label>
+            Стоимость:
+            <input id="cost-value" type="number" min="5" max="200" value="10" />
+          </label>
+        </div>
+
+        <button id="start-upgrade" class="primary-btn full">Начать</button>
+      </div>
+    </div>
+
+    <div id="topup-modal" class="modal hidden">
+      <div class="modal-card small-card">
+        <button class="close-btn" data-close="topup-modal">×</button>
+        <h3>Пополнение баланса</h3>
+        <p class="modal-copy">Оплата проходит вручную через Telegram. Выбери сумму и отправь чек администратору.</p>
+
+        <div class="sum-grid">
+          <button class="sum-btn active" data-amount="100">100 G</button>
+          <button class="sum-btn" data-amount="300">300 G</button>
+          <button class="sum-btn" data-amount="500">500 G</button>
+          <button class="sum-btn" data-amount="1000">1000 G</button>
+          <button class="sum-btn" data-amount="2500">2500 G</button>
+          <button class="sum-btn" data-amount="5000">5000 G</button>
+        </div>
+
+        <input id="custom-topup" type="number" min="10" value="500" class="field" />
+        <button id="confirm-topup" class="primary-btn full">Оплатить через Telegram</button>
+      </div>
+    </div>
+
+    <div id="admin-modal" class="modal hidden">
+      <div class="modal-card small-card">
+        <button class="close-btn" data-close="admin-modal">×</button>
+        <h3>Админ-панель</h3>
+        <label>
+          Пароль
+          <input id="admin-password" type="password" class="field" placeholder="5533422" />
+        </label>
+        <label>
+          Username
+          <input id="admin-user" type="text" class="field" placeholder="username" />
+        </label>
+        <label>
+          Сумма (+ balance)
+          <input id="admin-amount" type="number" min="1" value="100" class="field" />
+        </label>
+        <button id="grant-currency" class="primary-btn full">Выдать валюту</button>
+      </div>
+    </div>
+
+    <div id="toast" class="toast hidden"></div>
+
+    <script src="/app.js"></script>
+  </body>
+</html>
